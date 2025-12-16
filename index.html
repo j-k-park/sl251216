@@ -278,8 +278,9 @@
                 subItems: [
                     { id: 'jeonbuk-gpt-link', title: '03-1. 전북 GPT 바로가기' },
                     { id: 'jeonbuk-gpt-notice', title: '03-2. 생기부 작성 유의사항' },
-                    { id: 'jeonbuk-gpt-guide', title: '03-3. AI 활용 초안 작성 가이드' },
-                    { id: 'jeonbuk-gpt-helper', title: '03-4. 생기부 초안 작성 도우미' }
+                    { id: 'jeonbuk-gpt-eval', title: '03-3. 학생부 종합 공통평가 요소' },
+                    { id: 'jeonbuk-gpt-guide', title: '03-4. AI 활용 초안 작성 가이드' },
+                    { id: 'jeonbuk-gpt-helper', title: '03-5. 생기부 초안 작성 도우미' }
                 ]
             }, 
             { 
@@ -571,19 +572,25 @@
                                 <div className={`mt-4 text-xs md:text-sm text-gray-700 leading-relaxed whitespace-pre-wrap font-medium ${compact ? 'ml-6 pl-4' : 'ml-12 pl-6'} border-l-2 border-gray-200 py-2`}>
                                     {simpleText}
                                 </div>
-                            ) : children ? (
-                                <div className="mt-4 px-2">
-                                    {children}
-                                </div>
                             ) : (
-                                items && items.length > 0 && (
-                                    <div className={`space-y-4 mt-4 border-l-2 border-gray-200 py-2 ${compact ? 'ml-6 pl-4' : 'ml-12 pl-6'}`}>
-                                        {items.map((item, idx) => (
-                                            /* 수정됨: {...item}을 사용하여 subItems를 포함한 모든 데이터를 전달 */
-                                            <PromptItem key={idx} {...item} />
-                                        ))}
-                                    </div>
-                                )
+                                <>
+                                    {/* Items Rendering */}
+                                    {items && items.length > 0 && (
+                                        <div className={`space-y-4 mt-4 border-l-2 border-gray-200 py-2 ${compact ? 'ml-6 pl-4' : 'ml-12 pl-6'}`}>
+                                            {items.map((item, idx) => (
+                                                /* 수정됨: {...item}을 사용하여 subItems를 포함한 모든 데이터를 전달 */
+                                                <PromptItem key={idx} {...item} />
+                                            ))}
+                                        </div>
+                                    )}
+                                    
+                                    {/* Children Rendering (Custom Content) - Items가 있어도 렌더링되도록 수정 */}
+                                    {children && (
+                                        <div className="mt-4 px-2">
+                                            {children}
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </div>
                     )}
@@ -1999,7 +2006,23 @@
                                         </a>
                                     </div>
 
-                                    {/* [New] 03-3. 생성형AI 활용한 생기부 초안 작성 가이드 Banner */}
+                                    {/* [New] 03-3. 학생부 종합 공통평가 요소 및 항목 Banner */}
+                                    <div id="jeonbuk-gpt-eval" className="scroll-mt-32">
+                                        <a 
+                                            href="https://drive.google.com/file/d/1FjL1t0D4waT6PtIHS8nd_81rk-6WT_oH/view?usp=sharing" 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="block w-full bg-green-50 border border-green-200 text-green-700 font-bold p-4 rounded-xl mb-4 shadow-sm hover:bg-green-100 hover:shadow-md transition-all flex items-center justify-between group"
+                                        >
+                                            <span className="flex items-center gap-3">
+                                                <div className="bg-white p-2 rounded-lg text-green-500 shadow-sm"><CheckCircle size={20}/></div>
+                                                03-3. 학생부 종합 공통평가 요소 및 항목
+                                            </span>
+                                            <ExternalLink size={20} className="text-green-400 group-hover:text-green-600"/>
+                                        </a>
+                                    </div>
+
+                                    {/* [New] 03-4. 생성형AI 활용한 생기부 초안 작성 가이드 Banner */}
                                     <div id="jeonbuk-gpt-guide" className="scroll-mt-32">
                                         <a 
                                             href="https://drive.google.com/file/d/1B2eqeoSOzqE2Rr9U74QGXSJSyQ8O4F5o/view?usp=sharing" 
@@ -2009,14 +2032,14 @@
                                         >
                                             <span className="flex items-center gap-3">
                                                 <div className="bg-white p-2 rounded-lg text-blue-500 shadow-sm"><BookOpen size={20}/></div>
-                                                03-3. 생성형AI 활용한 생기부 초안 작성 가이드
+                                                03-4. 생성형AI 활용한 생기부 초안 작성 가이드
                                             </span>
                                             <ExternalLink size={20} className="text-blue-400 group-hover:text-blue-600"/>
                                         </a>
                                     </div>
 
                                     <PromptAccordion 
-                                        title="03-4. 전북 GPT / Gemini 3.0 : 생기부 작성 도우미 (🔒 비번필요)" 
+                                        title="03-5. 전북 GPT / Gemini 3.0 : 생기부 작성 도우미 (🔒 비번필요)" 
                                         locked={true}
                                         hashedPassword="1599742" /* "4321"의 해시값 */
                                         items={[
@@ -3215,7 +3238,66 @@ Let's think step by step.`
                                                     linkLabel: "웹사이트 열기"
                                                 }
                                             ]}
-                                        />
+                                        >
+                                            {/* '과정중심 평가 연계 과목 세특 예시'를 children으로 이동 */}
+                                            <div className="mt-6 pt-4 border-t border-gray-200">
+                                                <h4 className="font-bold text-gray-700 mb-4 flex items-center gap-2 text-sm ml-2">
+                                                    <Star size={16} className="text-yellow-500"/>과정중심 평가 연계 과목 세특 예시
+                                                </h4>
+                                                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                                                    {/* 국어 */}
+                                                    <a href="https://drive.google.com/file/d/1HZLWQZFLpsWGpKkjAz60cEhjsrKUKdh-/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-blue-100 bg-blue-50 hover:bg-blue-100 hover:shadow-md transition-all text-center group">
+                                                        <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-blue-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">국</div>
+                                                        <span className="text-xs font-bold text-blue-800">국어</span>
+                                                    </a>
+                                                    {/* 영어 */}
+                                                    <a href="https://drive.google.com/file/d/12gT0PxZLJP6G86cF-EEv5zPhqm2I8wBA/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-indigo-100 bg-indigo-50 hover:bg-indigo-100 hover:shadow-md transition-all text-center group">
+                                                        <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-indigo-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">E</div>
+                                                        <span className="text-xs font-bold text-indigo-800">영어</span>
+                                                    </a>
+                                                    {/* 수학 */}
+                                                    <a href="https://drive.google.com/file/d/1vG43PL21_NWd8obT5xLH-hcYMjGOyT51/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-purple-100 bg-purple-50 hover:bg-purple-100 hover:shadow-md transition-all text-center group">
+                                                        <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-purple-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">수</div>
+                                                        <span className="text-xs font-bold text-purple-800">수학</span>
+                                                    </a>
+                                                    {/* 사회 */}
+                                                    <a href="https://drive.google.com/file/d/1hrKMbZI-TQwcGv5t2IaX52E_jXPPXs9J/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-green-100 bg-green-50 hover:bg-green-100 hover:shadow-md transition-all text-center group">
+                                                        <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-green-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">사</div>
+                                                        <span className="text-xs font-bold text-green-800">사회</span>
+                                                    </a>
+                                                    {/* 과학 */}
+                                                    <a href="https://drive.google.com/file/d/1lyhhqrrs6vzMYjlF1QppEBnVSBaS2N1C/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-teal-100 bg-teal-50 hover:bg-teal-100 hover:shadow-md transition-all text-center group">
+                                                        <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-teal-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">과</div>
+                                                        <span className="text-xs font-bold text-teal-800">과학</span>
+                                                    </a>
+                                                    {/* 역사 */}
+                                                    <a href="https://drive.google.com/file/d/1K3501O0xg1tBI9HBp046hkYvg1ijUM7M/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-amber-100 bg-amber-50 hover:bg-amber-100 hover:shadow-md transition-all text-center group">
+                                                        <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-amber-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">역</div>
+                                                        <span className="text-xs font-bold text-amber-800">역사</span>
+                                                    </a>
+                                                    {/* 도덕 */}
+                                                    <a href="https://drive.google.com/file/d/1Hm9CVzB3Jm4AsaPV1N7p-65ainNu1RAc/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100 hover:shadow-md transition-all text-center group">
+                                                        <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-gray-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">도</div>
+                                                        <span className="text-xs font-bold text-gray-800">도덕</span>
+                                                    </a>
+                                                    {/* 음악 */}
+                                                    <a href="https://drive.google.com/file/d/1rRO7TfTgbQ78tpKliNycE9NcoFvWbLCw/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-pink-100 bg-pink-50 hover:bg-pink-100 hover:shadow-md transition-all text-center group">
+                                                        <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-pink-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">음</div>
+                                                        <span className="text-xs font-bold text-pink-800">음악</span>
+                                                    </a>
+                                                    {/* 미술 */}
+                                                    <a href="https://drive.google.com/file/d/1moufWIPNp3G6Xs15w_kPokbT5-X_TcmQ/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-rose-100 bg-rose-50 hover:bg-rose-100 hover:shadow-md transition-all text-center group">
+                                                        <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-rose-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">미</div>
+                                                        <span className="text-xs font-bold text-rose-800">미술</span>
+                                                    </a>
+                                                    {/* 체육 */}
+                                                    <a href="https://drive.google.com/file/d/1mA6oail8j9ehasr4bFchbhg2rXP6JRLa/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-cyan-100 bg-cyan-50 hover:bg-cyan-100 hover:shadow-md transition-all text-center group">
+                                                        <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-cyan-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">체</div>
+                                                        <span className="text-xs font-bold text-cyan-800">체육</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </PromptAccordion>
                                     </div>
                                 </div>
                             </div>
