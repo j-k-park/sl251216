@@ -1240,7 +1240,7 @@
             );
         };
 
-        const MainContent = ({ activeSection, popupImg, setPopupImg }) => {
+        const MainContent = ({ activeSection, popupImg, setPopupImg, globalBgColor, setGlobalBgColor }) => {
             const [imgError, setImgError] = useState(false);
 
             /* 수정됨: 프로필 이미지 URL 변경 */
@@ -1251,6 +1251,9 @@
             // [New] Intro Background Color State
             const [introTheme, setIntroTheme] = useState("from-blue-500 to-indigo-600");
             const [isPaletteOpen, setIsPaletteOpen] = useState(false); // 팔레트 토글 상태 추가
+            
+            // [New] Global Background Palette State
+            const [isGlobalPaletteOpen, setIsGlobalPaletteOpen] = useState(false);
 
             const colorOptions = [
                 { bg: "bg-blue-500", grad: "from-blue-500 to-indigo-600" },
@@ -1261,6 +1264,18 @@
                 { bg: "bg-cyan-500", grad: "from-cyan-500 to-blue-500" },
                 { bg: "bg-yellow-500", grad: "from-yellow-400 to-orange-500" },
                 { bg: "bg-slate-600", grad: "from-slate-600 to-gray-800" },
+            ];
+
+            // Global Background Palette Options
+            const bgPalette = [
+                '#FDFBF7', // 기본 (Warm White)
+                '#E3F2FD', // 파스텔 블루
+                '#E8F5E9', // 파스텔 그린
+                '#F3E5F5', // 파스텔 퍼플
+                '#FCE4EC', // 파스텔 핑크
+                '#FFF3E0', // 파스텔 오렌지
+                '#FFFDE7', // 파스텔 옐로우
+                '#E0F2F1', // 파스텔 틸
             ];
 
             // 팝업 이미지가 변경되면 에러 상태 초기화
@@ -1280,7 +1295,33 @@
                             {/* 수정됨: 문구 변경 및 글자 크기 축소 (한 줄 표시 위해 text-base ~ xl 반응형 적용) */}
                             <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 tracking-tight">Brisk, Notebook LM, 전북 GPT, Gemini 3.0 PRO 친구맺기</h1>
                         </div>
-                        <div className="hidden md:flex items-center gap-2">
+                        <div className="hidden md:flex items-center gap-4">
+                            {/* [New] 배경색 변경 팔레트 배너 (수정됨: 아이콘 클릭 시 토글) */}
+                            <div className="relative">
+                                <button
+                                    onClick={() => setIsGlobalPaletteOpen(!isGlobalPaletteOpen)}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-full border shadow-sm backdrop-blur-sm transition-all ${isGlobalPaletteOpen ? 'bg-blue-50 border-blue-200 text-blue-600' : 'bg-white/60 border-gray-200 text-gray-500 hover:bg-white hover:text-gray-800'}`}
+                                    title="배경색 변경"
+                                >
+                                    <Palette size={18} />
+                                    <span className="text-xs font-bold">배경 테마</span>
+                                </button>
+                                
+                                {isGlobalPaletteOpen && (
+                                    <div className="absolute top-full right-0 mt-3 p-3 bg-white rounded-2xl shadow-xl border border-gray-100 flex gap-2 animate-fade-in z-50 w-max">
+                                        {bgPalette.map((color) => (
+                                            <button
+                                                key={color}
+                                                onClick={() => { setGlobalBgColor(color); setIsGlobalPaletteOpen(false); }}
+                                                className={`w-6 h-6 rounded-full border border-black/5 transition-all hover:scale-125 hover:shadow-md ${globalBgColor === color ? 'ring-2 ring-gray-400 scale-110' : ''}`}
+                                                style={{ backgroundColor: color }}
+                                                title="배경색 선택"
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
                             <button 
                                 onClick={() => window.open('https://drive.google.com/file/d/1Wx-ZyFV6DraGR4unMfyECBpVMnUeQBRk/view?usp=sharing', 'popup', 'width=1200,height=900,scrollbars=yes,resizable=yes')}
                                 className="px-4 py-1.5 bg-yellow-100 text-yellow-800 rounded-xl text-[11px] font-bold text-right flex flex-col items-end leading-snug hover:bg-yellow-200 hover:shadow-md transition-all cursor-pointer"
@@ -3348,6 +3389,7 @@ Let's think step by step.`
             const [activeSection, setActiveSection] = useState('intro');
             const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
             const [popupImg, setPopupImg] = useState(null);
+            const [globalBgColor, setGlobalBgColor] = useState('#FDFBF7');
 
             useEffect(() => {
                 const handleScroll = () => {
@@ -3375,7 +3417,7 @@ Let's think step by step.`
             };
 
             return (
-                <div className="min-h-screen bg-[#FDFBF7]">
+                <div className="min-h-screen transition-colors duration-500" style={{ backgroundColor: globalBgColor }}>
                     <button 
                         onClick={() => setIsMobileMenuOpen(true)}
                         className="fixed bottom-6 right-6 lg:hidden z-50 bg-blue-600 text-white p-4 rounded-full shadow-xl hover:bg-blue-700 transition-colors"
@@ -3394,6 +3436,8 @@ Let's think step by step.`
                         activeSection={activeSection} 
                         popupImg={popupImg}
                         setPopupImg={setPopupImg}
+                        globalBgColor={globalBgColor}
+                        setGlobalBgColor={setGlobalBgColor}
                     />
                 </div>
             );
