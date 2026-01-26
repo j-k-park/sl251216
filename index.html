@@ -239,12 +239,14 @@
         /* [추가됨] 자물쇠 아이콘 */
         const Lock = (props) => <IconWrapper {...props}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></IconWrapper>;
         const Unlock = (props) => <IconWrapper {...props}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></IconWrapper>;
+        /* [추가됨] 팔레트 아이콘 */
+        const Palette = (props) => <IconWrapper {...props}><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.093 0-.679.52-1.211 1.218-1.211H16c3.72 0 6.5-2.79 6.5-6.5C22.5 5.6 17.9 2 12 2Z"/></IconWrapper>;
 
         // --- Data & Content ---
         const navigation = [
             { 
                 id: 'intro', 
-                title: '01. Brisk TC 실습',
+                title: '01. Brisk 소개',
                 subItems: [
                     { id: 'developer', title: '01-1. 개발자 & 철학' },
                     { id: 'install', title: '01-2. 설치 및 가입' },
@@ -260,7 +262,7 @@
             },
             { 
                 id: 'notebooklm', 
-                title: '02. Notebook LM 실습',
+                title: '02. Notebook LM',
                 subItems: [
                     { id: 'notebook-audio', title: '02-1. AI오디오 오버뷰' },
                     { id: 'notebook-video', title: '02-2. 동영상 개요' },
@@ -278,9 +280,8 @@
                 subItems: [
                     { id: 'jeonbuk-gpt-link', title: '03-1. 전북 GPT 바로가기' },
                     { id: 'jeonbuk-gpt-notice', title: '03-2. 생기부 작성 유의사항' },
-                    { id: 'jeonbuk-gpt-eval', title: '03-3. 학생부 종합 공통평가 요소' },
-                    { id: 'jeonbuk-gpt-guide', title: '03-4. AI 활용 초안 작성 가이드' },
-                    { id: 'jeonbuk-gpt-helper', title: '03-5. 생기부 초안 작성 도우미' }
+                    { id: 'jeonbuk-gpt-guide', title: '03-3. AI 활용 초안 작성 가이드' },
+                    { id: 'jeonbuk-gpt-helper', title: '03-4. 생기부 초안 작성 도우미' }
                 ]
             }, 
             { 
@@ -296,8 +297,7 @@
                 id: 'gpts-gems', 
                 title: '05. GPTs / Gems 설정',
                 subItems: [
-                    { id: 'gpts-gems-guide', title: '05-1. 맞춤형 AI 설정' },
-                    { id: 'gpts-gems-follow', title: '05-2. 연수강사 따라하기' }
+                    { id: 'gpts-gems-guide', title: '05-1. 맞춤형 AI 설정' }
                 ]
             },
             { 
@@ -370,13 +370,13 @@
 
         // --- Components ---
 
-        /* 수정됨: noCopy prop 추가, customContent prop 추가, level prop 추가로 계층 구조 시각화 */
-        const PromptItem = ({ label, text, link, subItems, noCopy, copyLabel, linkLabel, customContent, level = 0 }) => {
+        /* 수정됨: noCopy prop 추가 */
+        const PromptItem = ({ label, text, link, subItems, noCopy, copyLabel, linkLabel }) => {
             const [isOpen, setIsOpen] = useState(false);
             const [copied, setCopied] = useState(false);
 
             /* 수정됨: 토글 가능한 콘텐츠가 있는지 확인 */
-            const hasContent = text || (subItems && subItems.length > 0) || customContent;
+            const hasContent = text || (subItems && subItems.length > 0);
 
             const handleCopy = (e) => {
                 e.stopPropagation(); // 버튼 클릭 시 토글 방지
@@ -395,20 +395,8 @@
                 window.open(link, '_blank');
             };
 
-            // 레벨에 따른 스타일 설정 (하위 항목일수록 들여쓰기와 파스텔톤 적용)
-            const isSub = level > 0;
-            const containerClass = isSub 
-                ? "bg-indigo-50/60 border border-indigo-100 rounded-lg ml-8 shadow-sm my-1" // 하위 항목: 들여쓰기(ml-8), 파스텔 배경
-                : "bg-white border border-gray-200 rounded-lg shadow-sm"; // 최상위 항목: 흰색 배경
-            
-            const titleColorClass = isSub
-                ? (isOpen ? 'text-indigo-700' : 'text-indigo-600') // 하위 항목 텍스트 색상
-                : (isOpen ? 'text-blue-600' : 'text-teal-700');   // 최상위 항목 텍스트 색상
-
-            const chevronColorClass = isSub ? "text-indigo-400" : "text-gray-400";
-
             return (
-                <div className={`${containerClass} transition-all ${isOpen ? (isSub ? 'ring-1 ring-indigo-200 border-indigo-300' : 'ring-1 ring-blue-200 border-blue-300') : (isSub ? 'hover:border-indigo-300' : 'hover:border-blue-300')}`}>
+                <div className={`bg-white border border-gray-200 rounded-lg shadow-sm transition-all ${isOpen ? 'ring-1 ring-blue-200 border-blue-300' : 'hover:border-blue-300'}`}>
                     <div 
                         /* 수정됨: 콘텐츠가 있을 때만 토글 기능 활성화 */
                         onClick={() => hasContent && setIsOpen(!isOpen)}
@@ -416,11 +404,11 @@
                     >
                         <div className="flex items-center gap-2 flex-1 pr-4">
                             {/* 수정됨: 토글 가능 여부에 따라 아이콘 변경 (화살표 vs 문서) */}
-                            <span className={`font-bold text-sm flex items-center gap-2 ${titleColorClass}`}>
+                            <span className={`font-bold text-sm flex items-center gap-2 ${isOpen ? 'text-blue-600' : 'text-teal-700'}`}>
                                 {hasContent ? (
-                                    isOpen ? <ChevronDown size={16} className={isSub ? "text-indigo-500 shrink-0" : "text-blue-500 shrink-0"}/> : <ChevronRight size={16} className={`${chevronColorClass} shrink-0`}/>
+                                    isOpen ? <ChevronDown size={16} className="text-blue-500 shrink-0"/> : <ChevronRight size={16} className="text-gray-400 shrink-0"/>
                                 ) : (
-                                    <FileText size={16} className={`shrink-0 ${chevronColorClass}`}/>
+                                    <FileText size={16} className="shrink-0 text-gray-400"/>
                                 )}
                                 {label}
                             </span>
@@ -431,7 +419,7 @@
                             {link && (
                                 <button 
                                     onClick={handleLink}
-                                    className={`text-xs px-2.5 py-1.5 rounded-lg border flex items-center gap-1.5 transition-all font-medium hover:shadow-sm shrink-0 ${isSub ? 'bg-indigo-100 text-indigo-700 border-indigo-200 hover:bg-indigo-200' : 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100'}`}
+                                    className="text-xs px-2.5 py-1.5 rounded-lg border flex items-center gap-1.5 transition-all font-medium bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100 hover:shadow-sm shrink-0"
                                 >
                                     <ExternalLink size={14}/>
                                     {linkLabel || '문서 열기'}
@@ -442,7 +430,7 @@
                             {text && !noCopy && (
                                 <button 
                                     onClick={handleCopy}
-                                    className={`text-xs px-2.5 py-1.5 rounded-lg border flex items-center gap-1.5 transition-all font-medium shrink-0 ${copied ? 'bg-green-50 text-green-600 border-green-200' : (isSub ? 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100')}`}
+                                    className={`text-xs px-2.5 py-1.5 rounded-lg border flex items-center gap-1.5 transition-all font-medium shrink-0 ${copied ? 'bg-green-50 text-green-600 border-green-200' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'}`}
                                 >
                                     {copied ? <CheckCircle size={14}/> : <Copy size={14}/>}
                                     {copied ? '복사됨' : (copyLabel || '복사')}
@@ -453,22 +441,16 @@
 
                     {/* Content Body */}
                     {isOpen && hasContent && (
-                        <div className={`border-t ${isSub ? 'border-indigo-100 bg-indigo-50/30' : 'border-gray-100 bg-gray-50/50'} p-4 animate-fade-in`}>
+                        <div className="border-t border-gray-100 bg-gray-50/50 p-4 animate-fade-in">
                             {text && (
                                 <div className="bg-gray-800 text-gray-200 p-4 rounded-lg text-xs font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto shadow-inner border border-gray-700">
                                     {text}
                                 </div>
                             )}
-                            {/* customContent 렌더링 추가 */}
-                            {customContent && (
-                                <div className="mt-2">
-                                    {customContent}
-                                </div>
-                            )}
                             {subItems && (
                                 <div className="space-y-2 mt-2">
                                     {subItems.map((sub, idx) => (
-                                        <PromptItem key={idx} {...sub} level={level + 1} />
+                                        <PromptItem key={idx} {...sub} />
                                     ))}
                                 </div>
                             )}
@@ -591,25 +573,19 @@
                                 <div className={`mt-4 text-xs md:text-sm text-gray-700 leading-relaxed whitespace-pre-wrap font-medium ${compact ? 'ml-6 pl-4' : 'ml-12 pl-6'} border-l-2 border-gray-200 py-2`}>
                                     {simpleText}
                                 </div>
+                            ) : children ? (
+                                <div className="mt-4 px-2">
+                                    {children}
+                                </div>
                             ) : (
-                                <>
-                                    {/* Items Rendering */}
-                                    {items && items.length > 0 && (
-                                        <div className={`space-y-4 mt-4 border-l-2 border-gray-200 py-2 ${compact ? 'ml-6 pl-4' : 'ml-12 pl-6'}`}>
-                                            {items.map((item, idx) => (
-                                                /* 수정됨: {...item}을 사용하여 subItems를 포함한 모든 데이터를 전달 */
-                                                <PromptItem key={idx} {...item} />
-                                            ))}
-                                        </div>
-                                    )}
-                                    
-                                    {/* Children Rendering (Custom Content) - Items가 있어도 렌더링되도록 수정 */}
-                                    {children && (
-                                        <div className="mt-4 px-2">
-                                            {children}
-                                        </div>
-                                    )}
-                                </>
+                                items && items.length > 0 && (
+                                    <div className={`space-y-4 mt-4 border-l-2 border-gray-200 py-2 ${compact ? 'ml-6 pl-4' : 'ml-12 pl-6'}`}>
+                                        {items.map((item, idx) => (
+                                            /* 수정됨: {...item}을 사용하여 subItems를 포함한 모든 데이터를 전달 */
+                                            <PromptItem key={idx} {...item} />
+                                        ))}
+                                    </div>
+                                )
                             )}
                         </div>
                     )}
@@ -1272,6 +1248,21 @@
             
             const footerImgUrl = "https://ivy-rugby-daf.notion.site/image/attachment%3A2b9cc2eb-226b-4b27-893c-32f9a35d41c8%3A%EC%83%9D%EC%84%B1%ED%98%95AI-%ED%99%9C%EC%9A%A9-%EC%88%98%EC%97%85-%EC%97%AD%EB%9F%89%EA%B0%95%ED%99%94-%EC%97%B0%EC%88%98-_250903_-%EA%B0%95%EC%82%AC%EC%86%8C%EA%B0%9C%ED%92%80_%EB%B3%B5%EC%82%AC%EB%B3%B8-077.jpg?table=block&id=2bf3ec20-06d9-8020-b7bd-e3728c1fc445&spaceId=a57f2ff5-0671-465c-bf6a-c699bdf0fd16&width=1420&userId=&cache=v2";
 
+            // [New] Intro Background Color State
+            const [introTheme, setIntroTheme] = useState("from-blue-500 to-indigo-600");
+            const [isPaletteOpen, setIsPaletteOpen] = useState(false); // 팔레트 토글 상태 추가
+
+            const colorOptions = [
+                { bg: "bg-blue-500", grad: "from-blue-500 to-indigo-600" },
+                { bg: "bg-green-500", grad: "from-green-500 to-emerald-600" },
+                { bg: "bg-pink-500", grad: "from-pink-500 to-rose-500" },
+                { bg: "bg-purple-500", grad: "from-purple-500 to-violet-600" },
+                { bg: "bg-orange-500", grad: "from-orange-400 to-red-500" },
+                { bg: "bg-cyan-500", grad: "from-cyan-500 to-blue-500" },
+                { bg: "bg-yellow-500", grad: "from-yellow-400 to-orange-500" },
+                { bg: "bg-slate-600", grad: "from-slate-600 to-gray-800" },
+            ];
+
             // 팝업 이미지가 변경되면 에러 상태 초기화
             useEffect(() => {
                 setImgError(false);
@@ -1291,7 +1282,7 @@
                         </div>
                         <div className="hidden md:flex items-center gap-2">
                             <button 
-                                onClick={() => setPopupImg(profileImgUrl)}
+                                onClick={() => window.open('https://drive.google.com/file/d/1Wx-ZyFV6DraGR4unMfyECBpVMnUeQBRk/view?usp=sharing', 'popup', 'width=1200,height=900,scrollbars=yes,resizable=yes')}
                                 className="px-4 py-1.5 bg-yellow-100 text-yellow-800 rounded-xl text-[11px] font-bold text-right flex flex-col items-end leading-snug hover:bg-yellow-200 hover:shadow-md transition-all cursor-pointer"
                             >
                                 {/* 수정됨: [중등영어] -> [중등]으로 변경 */}
@@ -1305,14 +1296,41 @@
                         
                         {/* Intro Section */}
                         <section id="intro" className="scroll-mt-28">
-                            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+                            <div className={`bg-gradient-to-br ${introTheme} rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden transition-colors duration-500`}>
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
                                 <div className="absolute bottom-0 left-0 w-48 h-48 bg-pink-400 opacity-20 rounded-full -ml-10 -mb-10 blur-2xl"></div>
                                 
                                 <div className="relative z-10">
-                                <div className="inline-block px-4 py-2 bg-white/20 rounded-full text-sm font-bold backdrop-blur-sm mb-6 border border-white/30">
-                                    전주솔내고등학교 선생님 환영합니다 👋
+                                <div className="flex flex-wrap items-center gap-3 mb-6">
+                                    <div className="inline-block px-4 py-2 bg-white/20 rounded-full text-sm font-bold backdrop-blur-sm border border-white/30">
+                                        전주솔내고등학교 선생님 환영합니다 👋
+                                    </div>
+                                    
+                                    {/* [수정됨] 팔레트 아이콘 및 팝업 */}
+                                    <div className="relative">
+                                        <button
+                                            onClick={() => setIsPaletteOpen(!isPaletteOpen)}
+                                            className={`p-2 rounded-full backdrop-blur-md border transition-all flex items-center justify-center shadow-sm ${isPaletteOpen ? 'bg-white text-gray-800 border-white' : 'bg-white/10 text-white border-white/30 hover:bg-white/20'}`}
+                                            title="배경색 변경"
+                                        >
+                                            <Palette size={18} />
+                                        </button>
+                                        
+                                        {isPaletteOpen && (
+                                            <div className="absolute top-full left-0 mt-3 p-3 bg-white rounded-2xl shadow-xl border border-gray-100 flex gap-2 animate-fade-in z-20 w-max">
+                                                {colorOptions.map((opt, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={() => { setIntroTheme(opt.grad); setIsPaletteOpen(false); }}
+                                                        className={`w-6 h-6 rounded-full ${opt.bg} border-2 border-white ring-1 ring-gray-100 hover:scale-110 transition-all shadow-sm`}
+                                                        title="색상 선택"
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
+
                                 {/* 수정됨: '퀴즈앤' 텍스트에 링크 추가 */}
                                 <h1 className="text-2xl md:text-4xl font-bold mb-6 leading-tight">
                                     수업 설계부터 평가 및 생기부 초안 작성까지<br/>
@@ -1933,7 +1951,7 @@
                                     </div>
                                     <div>
                                         <div className="flex flex-wrap items-center gap-3">
-                                            <h2 className="text-3xl font-bold text-gray-800">02. Notebook LM 실습</h2>
+                                            <h2 className="text-3xl font-bold text-gray-800">02. Notebook LM</h2>
                                             <button 
                                                 onClick={() => window.open('https://support.google.com/notebooklm/?hl=ko#topic=16164070', '_blank')}
                                                 className="px-3 py-1.5 bg-white text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold shadow-sm flex items-center gap-1.5 hover:bg-emerald-50 transition-all hover:-translate-y-0.5"
@@ -2025,23 +2043,7 @@
                                         </a>
                                     </div>
 
-                                    {/* [New] 03-3. 학생부 종합 공통평가 요소 및 항목 Banner */}
-                                    <div id="jeonbuk-gpt-eval" className="scroll-mt-32">
-                                        <a 
-                                            href="https://drive.google.com/file/d/1FjL1t0D4waT6PtIHS8nd_81rk-6WT_oH/view?usp=sharing" 
-                                            target="_blank" 
-                                            rel="noopener noreferrer"
-                                            className="block w-full bg-green-50 border border-green-200 text-green-700 font-bold p-4 rounded-xl mb-4 shadow-sm hover:bg-green-100 hover:shadow-md transition-all flex items-center justify-between group"
-                                        >
-                                            <span className="flex items-center gap-3">
-                                                <div className="bg-white p-2 rounded-lg text-green-500 shadow-sm"><CheckCircle size={20}/></div>
-                                                03-3. 학생부 종합 공통평가 요소 및 항목
-                                            </span>
-                                            <ExternalLink size={20} className="text-green-400 group-hover:text-green-600"/>
-                                        </a>
-                                    </div>
-
-                                    {/* [New] 03-4. 생성형AI 활용한 생기부 초안 작성 가이드 Banner */}
+                                    {/* [New] 03-3. 생성형AI 활용한 생기부 초안 작성 가이드 Banner */}
                                     <div id="jeonbuk-gpt-guide" className="scroll-mt-32">
                                         <a 
                                             href="https://drive.google.com/file/d/1B2eqeoSOzqE2Rr9U74QGXSJSyQ8O4F5o/view?usp=sharing" 
@@ -2051,14 +2053,14 @@
                                         >
                                             <span className="flex items-center gap-3">
                                                 <div className="bg-white p-2 rounded-lg text-blue-500 shadow-sm"><BookOpen size={20}/></div>
-                                                03-4. 생성형AI 활용한 생기부 초안 작성 가이드
+                                                03-3. 생성형AI 활용한 생기부 초안 작성 가이드
                                             </span>
                                             <ExternalLink size={20} className="text-blue-400 group-hover:text-blue-600"/>
                                         </a>
                                     </div>
 
                                     <PromptAccordion 
-                                        title="03-5. 전북 GPT / Gemini 3.0 : 생기부 작성 도우미 (🔒 비번필요)" 
+                                        title="03-4. 전북 GPT / Gemini 3.0 : 생기부 작성 도우미 (🔒 비번필요)" 
                                         locked={true}
                                         hashedPassword="1599742" /* "4321"의 해시값 */
                                         items={[
@@ -3002,19 +3004,6 @@ Let's think step by step.`
                                             ]}
                                         />
                                     </div>
-
-                                    {/* [New] 05-2. 연수강사 따라하기 */}
-                                    <div id="gpts-gems-follow" className="scroll-mt-32">
-                                        <PromptAccordion 
-                                            title="05-2. 연수강사 따라하기" 
-                                            items={[
-                                                {
-                                                    label: "실습 준비",
-                                                    text: "강사님의 안내에 따라 실습을 진행하는 공간입니다. 추후 실습 내용이 업데이트될 예정입니다."
-                                                }
-                                            ]}
-                                        />
-                                    </div>
                                 </div>
 
                                 {/* Background Decoration */}
@@ -3268,63 +3257,6 @@ Let's think step by step.`
                                                     link: "https://drive.google.com/file/d/1Dou2DfVxZuZ7dRRbmMhcbXoJZVQy0isp/view?usp=sharing",
                                                     noCopy: true,
                                                     linkLabel: "웹사이트 열기"
-                                                },
-                                                {
-                                                    label: "과정중심 평가 연계 과목 세특 예시",
-                                                    customContent: (
-                                                        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 pt-2">
-                                                            {/* 국어 */}
-                                                            <a href="https://drive.google.com/file/d/1HZLWQZFLpsWGpKkjAz60cEhjsrKUKdh-/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-blue-100 bg-blue-50 hover:bg-blue-100 hover:shadow-md transition-all text-center group">
-                                                                <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-blue-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">국</div>
-                                                                <span className="text-xs font-bold text-blue-800">국어</span>
-                                                            </a>
-                                                            {/* 영어 */}
-                                                            <a href="https://drive.google.com/file/d/12gT0PxZLJP6G86cF-EEv5zPhqm2I8wBA/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-indigo-100 bg-indigo-50 hover:bg-indigo-100 hover:shadow-md transition-all text-center group">
-                                                                <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-indigo-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">E</div>
-                                                                <span className="text-xs font-bold text-indigo-800">영어</span>
-                                                            </a>
-                                                            {/* 수학 */}
-                                                            <a href="https://drive.google.com/file/d/1vG43PL21_NWd8obT5xLH-hcYMjGOyT51/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-purple-100 bg-purple-50 hover:bg-purple-100 hover:shadow-md transition-all text-center group">
-                                                                <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-purple-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">수</div>
-                                                                <span className="text-xs font-bold text-purple-800">수학</span>
-                                                            </a>
-                                                            {/* 사회 */}
-                                                            <a href="https://drive.google.com/file/d/1hrKMbZI-TQwcGv5t2IaX52E_jXPPXs9J/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-green-100 bg-green-50 hover:bg-green-100 hover:shadow-md transition-all text-center group">
-                                                                <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-green-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">사</div>
-                                                                <span className="text-xs font-bold text-green-800">사회</span>
-                                                            </a>
-                                                            {/* 과학 */}
-                                                            <a href="https://drive.google.com/file/d/1lyhhqrrs6vzMYjlF1QppEBnVSBaS2N1C/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-teal-100 bg-teal-50 hover:bg-teal-100 hover:shadow-md transition-all text-center group">
-                                                                <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-teal-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">과</div>
-                                                                <span className="text-xs font-bold text-teal-800">과학</span>
-                                                            </a>
-                                                            {/* 역사 */}
-                                                            <a href="https://drive.google.com/file/d/1K3501O0xg1tBI9HBp046hkYvg1ijUM7M/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-amber-100 bg-amber-50 hover:bg-amber-100 hover:shadow-md transition-all text-center group">
-                                                                <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-amber-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">역</div>
-                                                                <span className="text-xs font-bold text-amber-800">역사</span>
-                                                            </a>
-                                                            {/* 도덕 */}
-                                                            <a href="https://drive.google.com/file/d/1Hm9CVzB3Jm4AsaPV1N7p-65ainNu1RAc/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100 hover:shadow-md transition-all text-center group">
-                                                                <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-gray-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">도</div>
-                                                                <span className="text-xs font-bold text-gray-800">도덕</span>
-                                                            </a>
-                                                            {/* 음악 */}
-                                                            <a href="https://drive.google.com/file/d/1rRO7TfTgbQ78tpKliNycE9NcoFvWbLCw/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-pink-100 bg-pink-50 hover:bg-pink-100 hover:shadow-md transition-all text-center group">
-                                                                <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-pink-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">음</div>
-                                                                <span className="text-xs font-bold text-pink-800">음악</span>
-                                                            </a>
-                                                            {/* 미술 */}
-                                                            <a href="https://drive.google.com/file/d/1moufWIPNp3G6Xs15w_kPokbT5-X_TcmQ/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-rose-100 bg-rose-50 hover:bg-rose-100 hover:shadow-md transition-all text-center group">
-                                                                <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-rose-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">미</div>
-                                                                <span className="text-xs font-bold text-rose-800">미술</span>
-                                                            </a>
-                                                            {/* 체육 */}
-                                                            <a href="https://drive.google.com/file/d/1mA6oail8j9ehasr4bFchbhg2rXP6JRLa/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="block p-3 rounded-xl border border-cyan-100 bg-cyan-50 hover:bg-cyan-100 hover:shadow-md transition-all text-center group">
-                                                                <div className="w-8 h-8 mx-auto bg-white rounded-full flex items-center justify-center text-cyan-600 font-bold mb-2 shadow-sm group-hover:scale-110 transition-transform">체</div>
-                                                                <span className="text-xs font-bold text-cyan-800">체육</span>
-                                                            </a>
-                                                        </div>
-                                                    )
                                                 }
                                             ]}
                                         />
